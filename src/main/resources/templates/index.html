@@ -17,25 +17,61 @@
       <a href="/pizze/create" class="btn btn-success">Crea nuova pizza</a>
     </div>
 
+    <!-- Barra di ricerca -->
+    <div class="mb-3 d-flex justify-content-end">
+      <form method="get" th:action="@{/pizze}">
+          <div class="input-group input-group-sm" style="max-width: 250px;">
+              <input name="keyword" type="search" class="form-control" placeholder="Cerca...">
+              <button class="btn btn-primary" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                </svg>
+              </button>
+          </div>
+      </form>
+    </div>
+
+    <th:block th:if = "${successMessage != null}">
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </th:block>
+  
+
     <!-- Messaggio se lista vuota -->
-    <div th:if="${#lists.isEmpty(elencoPizze)}" class="alert alert-info">
+    <div th:if="${#lists.isEmpty(pizze)}" class="alert alert-info">
       Nessuna pizza disponibile al momento
     </div>
 
     <!-- Lista pizze -->
-    <div class="row" th:if="${!#lists.isEmpty(elencoPizze)}">
-      <div class="col-md-4 mb-3" th:each="pizza : ${elencoPizze}">
-        <a th:href="@{'/pizze/show/' + ${pizza.id}}" class="text-decoration-none text-dark">
-          <div class="card h-100">
-            <img th:src="@{'/images/' + ${pizza.url}}" class="card-img-top" alt="Immagine pizza">
+    <div class="row" th:if="${!#lists.isEmpty(pizze)}">
+
+      <div class="col-md-4 mb-3" th:each="pizza : ${pizze}">
+        <div class="card h-100">
+          <a th:href="@{'/pizze/show/' + ${pizza.id}}" class="text-decoration-none text-dark">
+            <img th:src="@{'/images/' + ${pizza.url}}" class="card-img-top" alt="Immagine pizza" style="height: 200px; object-fit: cover;">
             <div class="card-body">
               <h5 class="card-title" th:text="${pizza.nome}">Nome</h5>
-              <p class="card-text" th:text="${pizza.descrizione}">Descrizione</p>
+              <p class="card-text text-truncate" th:text="${pizza.descrizione}">Descrizione</p>
               <p class="card-text"><strong th:text="${pizza.prezzo + ' €'}">Prezzo</strong></p>
             </div>
+          </a>
+          <div class="card-footer d-flex flex-column">
+            <div class="d-flex justify-content-between mb-2">
+              <a th:href="@{'/pizze/edit/' + ${pizza.id}}" class="btn btn-primary btn-sm">Modifica</a>
+              <a th:href="@{'/pizze/show/' + ${pizza.id}}" class="btn btn-info btn-sm text-white">Dettagli</a>
+              <form th:action="@{'/pizze/delete/' + ${pizza.id}}" method="post" style="display:inline">
+                <button class="btn btn-danger btn-sm" type="submit" 
+                        onclick="return confirm('Sei sicuro di voler cancellare questa pizza?');">
+                  Cancella
+                </button>
+              </form>
+            </div>
           </div>
-        </a>
+        </div>
       </div>
+      
     </div>
 
   </div>

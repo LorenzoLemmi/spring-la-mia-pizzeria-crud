@@ -1,10 +1,16 @@
 package pizzerie.la_mia_pizzeria.entities;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -32,10 +38,27 @@ public class Pizza {
     @NotNull(message = "Il prezzo è obbligatorio")
     @DecimalMin(value = "0.01", message = "Il prezzo deve essere positivo")
     @Column(name="prezzo", nullable=false)
-    private double prezzo;
+    private Double prezzo;
+
+    @OneToMany(mappedBy="pizza")
+    private List<OffertaSpeciale> offertaSpeciale;
+
+    @ManyToMany()
+    @JoinTable(name="pizza_ingredienti", 
+            joinColumns=@JoinColumn(name="pizza_id"), 
+            inverseJoinColumns=@JoinColumn(name="ingrediente_id"))
+    private List<Ingrediente> ingredienti;
 
     public Integer getId() {
         return id;
+    }
+
+    public List<OffertaSpeciale> getOffertaSpeciale() {
+        return offertaSpeciale;
+    }
+
+    public void setOffertaSpeciale(List<OffertaSpeciale> offertaSpeciale) {
+        this.offertaSpeciale = offertaSpeciale;
     }
 
     public void setId(Integer id) {
@@ -66,12 +89,20 @@ public class Pizza {
         this.url = url;
     }
 
-    public double getPrezzo() {
+    public Double getPrezzo() {
         return prezzo;
     }
 
-    public void setPrezzo(double prezzo) {
+    public void setPrezzo(Double prezzo) {
         this.prezzo = prezzo;
+    }
+
+    public List<Ingrediente> getIngredienti() {
+        return ingredienti;
+    }
+
+    public void setIngredienti(List<Ingrediente> ingredienti) {
+        this.ingredienti = ingredienti;
     }
 
 }

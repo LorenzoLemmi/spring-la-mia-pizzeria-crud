@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Nuova Offerta Speciale</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}" />
+    </head>
+<body>
+
+    <div th:replace="fragments/navbar :: navbar"></div>
+
+    <div class="container mt-4">
+        <h1>Nuova Offerta Speciale</h1>
+
+        <form th:object="${offerta}" th:action="@{/offerte/create}" method="post">
+
+        <input type="hidden" th:field="*{pizza.id}" /> <!--importante per portarsi dietro l'oggetto offertaSpeciale salvato-->
+
+        <div class="mb-3">
+            <label for="titolo" class="form-label">Titolo</label>
+            <input type="text" id="titolo" th:field="*{titolo}" class="form-control" required th:errorClass="is-invalid" />
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('titolo')}">
+                <ul class="mb-0">
+                    <li th:each="err : ${#fields.errors('titolo')}" th:text="${err}"></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="dataInizio" class="form-label">Data Inizio</label>
+            <input type="date" id="dataInizio" th:field="*{dataInizio}" class="form-control" required th:errorClass="is-invalid" />
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('dataInizio')}">
+                <ul class="mb-0">
+                    <li th:each="err : ${#fields.errors('dataInizio')}" th:text="${err}"></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="dataFine" class="form-label">Data Fine</label>
+            <input type="date" id="dataFine" th:field="*{dataFine}" class="form-control" required th:errorClass="is-invalid" />
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('dataFine')}">
+                <ul class="mb-0">
+                    <li th:each="err : ${#fields.errors('dataFine')}" th:text="${err}"></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="scontoPercentuale">Sconto Percentuale</label>
+            <input type="number" id="scontoPercentuale" th:field="*{scontoPercentuale}" min="0" max="100" required th:errorClass="is-invalid" />
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('scontoPercentuale')}">
+                <ul class="mb-0">
+                    <li th:each="err : ${#fields.errors('scontoPercentuale')}" th:text="${err}"></li>
+                </ul>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Salva</button>
+        <a th:href="@{/pizze/show/{id}(id=${offerta.pizza.id})}" class="btn btn-secondary">Annulla</a>
+        
+        </form>
+    </div>
+
+    <script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
+
