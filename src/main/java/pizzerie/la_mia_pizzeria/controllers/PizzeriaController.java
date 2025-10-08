@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Valid;
 import pizzerie.la_mia_pizzeria.entities.OffertaSpeciale;
 import pizzerie.la_mia_pizzeria.entities.Pizza;
+import pizzerie.la_mia_pizzeria.repositories.IngredienteRepository;
 import pizzerie.la_mia_pizzeria.repositories.OffertaSpecialeRepository;
 import pizzerie.la_mia_pizzeria.repositories.PizzaRepository;
 
@@ -33,6 +34,8 @@ public class PizzeriaController {
     private PizzaRepository repository;
     @Autowired
     private OffertaSpecialeRepository offertaSpecialeRepository;
+    @Autowired
+    private IngredienteRepository ingredienteRepository;
 
     @GetMapping
     public String index(Model model, @RequestParam(name="keyword", required=false) String keyword) {
@@ -63,6 +66,7 @@ public class PizzeriaController {
 
     @GetMapping("/create")
     public String createForm(Model model) {
+        model.addAttribute("list", ingredienteRepository.findAll());
         model.addAttribute("pizza", new Pizza());
         return "/pizze/form";
     }
@@ -77,6 +81,7 @@ public class PizzeriaController {
         }
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("list", ingredienteRepository.findAll());
             return "/pizze/form";
         }
         repository.save(formPizza);
@@ -86,6 +91,7 @@ public class PizzeriaController {
 
     @GetMapping("/edit/{id}")
     public String editPizza(@PathVariable("id") Integer id, Model model) {
+        model.addAttribute("list", ingredienteRepository.findAll());
         model.addAttribute("pizza", repository.findById(id).get());
         return "/pizze/formUpdate";
     }
@@ -93,13 +99,14 @@ public class PizzeriaController {
     @PostMapping("/edit/{id}")
     public String updatePizza(@PathVariable("id") Integer id,
                             @Valid @ModelAttribute("pizza") Pizza formPizza,
-                            BindingResult bindingResult) {
+                            BindingResult bindingResult, Model model) {
         Pizza oldPizza = repository.findById(formPizza.getId()).get();
         if (!oldPizza.getNome().equalsIgnoreCase(formPizza.getNome())) {
             bindingResult.addError(new ObjectError("nome", "Non è possibile modificare il nome della pizza"));
         }
         
         if (bindingResult.hasErrors()) {
+            model.addAttribute("list", ingredienteRepository.findAll());
             return "/pizze/formUpdate";
         }
         repository.save(formPizza);
