@@ -40,6 +40,7 @@ L’offerta speciale avrà :
 - una data di inizio
 - una data di fine
 - un titolo
+  
 La pagina di dettaglio della singola pizza mostrerà l’elenco delle offerte collegate e avrà un bottone “Crea nuova offerta speciale” per aggiungerne una nuova.
 Accanto ad ogni offerta speciale è previsto un bottone che mi porterà a una pagina per modificarla.
 
